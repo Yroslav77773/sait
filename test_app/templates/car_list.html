@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список автомобилей</title>
+</head>
+<body>
+    <h1>Список автомобилей</h1>
+
+    <ul>
+        {% for car in cars %}
+            <li>
+                {{ car.car_brand }} - {{ car.car_body }}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
