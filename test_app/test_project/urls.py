@@ -23,4 +23,5 @@ urlpatterns = [
     path('cars/', viewscar.car_list, name='car_list'),
 
 
+
 ]

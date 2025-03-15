@@ -1,17 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Список автомобилей</title>
+    <meta charset="UTF-8">
+    <title>Car List</title>
 </head>
 <body>
-    <h1>Список автомобилей</h1>
-
-    <ul>
-        {% for car in cars %}
-            <li>
-                {{ car.car_brand }} - {{ car.car_body }}
-            </li>
-        {% endfor %}
-    </ul>
+    <h1>Car</h1>
+    {% for car in cars %}
+        <div>
+            <p>Brand: {{ car.car_brand }}</p>
+            <p>Body: {{ car.car_body }}</p>
+            <p>Description: {{ car.description|default:"-" }}</p>
+            <p>Horsepower: {{ car.horse_power }}</p>
+            <p>Drive: {{ car.car_drive }}</p>
+            <p>Tax: {{ car.tax }}</p>
+            <p>User: {{ car.user }}</p>
+        </div>
+        <hr>
+    {% endfor %}
 </body>
 </html>

@@ -17,7 +17,7 @@ class CarImage(models.Model):
     image_path = models.CharField(max_length=255)  # Путь к изображению
 
     def __str__(self):
-        return self.image_path  # Display the image path
+        return self.image_path
 
 class CarReview(models.Model):
     contents = models.TextField(default=0)  # Текст обзора
@@ -27,4 +27,4 @@ class CarReview(models.Model):
     car = models.ForeignKey(Car, on_delete=models.DO_NOTHING, null=True)  # ID авто, к которому относится обзор
 
     def __str__(self):
-        return self.contents  # Display the review contents
+        return self.contents
