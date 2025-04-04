@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Все обзоры</title>
+</head>
+<body>
+    <h1>Все обзоры</h1>
+
+    {% if reviews %}
+        <ul>
+            {% for review in reviews %}
+                <li>
+                    <p>{{ review.contents }}</p>
+                    <p>Автор ID: {{ review.author_id }}</p>
+                    <p>Машина ID: {{ review.car_id }}</p>  <!-- показывает ID машины, к которой относится обзор -->
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Обзоров пока нет.</p>
+    {% endif %}
+</body>
+</html>

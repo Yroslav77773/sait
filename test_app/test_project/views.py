@@ -20,13 +20,3 @@ def my_form_view(request):
     return render(request, 'test.html', {'form': form})
 
 
-
-
-
-
-
-
-
-
-
-

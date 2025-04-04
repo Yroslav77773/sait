@@ -21,6 +21,7 @@ from . import views, viewscar
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('cars/', viewscar.car_list, name='car_list'),
+    path('reviews/', viewscar.car_review_list, name='car_review_list'),
 
 
 
