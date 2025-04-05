@@ -47,3 +47,4 @@ class TestForm(forms.Form):
         widget=forms.DateInput(attrs={'type': 'date'}),  # Use HTML5 date picker
         required=False
     )
+

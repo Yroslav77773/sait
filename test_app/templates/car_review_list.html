@@ -10,9 +10,10 @@
         <ul>
             {% for review in reviews %}
                 <li>
+                    <p><strong>Автор:</strong> {{ review.author.username }}</p>
+                    <p><strong>Машина:</strong> {{ review.car.car_brand }} {{ review.car.car_body }}</p>
                     <p>{{ review.contents }}</p>
-                    <p>Автор ID: {{ review.author_id }}</p>
-                    <p>Машина ID: {{ review.car_id }}</p>  <!-- показывает ID машины, к которой относится обзор -->
+                    <p>Лайки: {{ review.likes }} | Дизлайки: {{ review.dislikes }}</p>
                 </li>
             {% endfor %}
         </ul>
