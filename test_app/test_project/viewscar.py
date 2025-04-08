@@ -1,6 +1,7 @@
 # views.py
 from django.shortcuts import render
 from .models import Car
+from .models import CarReview
 
 def car_list(request):
     cars = Car.objects.all()
@@ -8,14 +9,8 @@ def car_list(request):
     return render(request, 'car_list.html', context)
 
 
-# views.py
-from django.shortcuts import render
-from .models import CarReview
 
 def car_review_list(request):
-    """
-    Получает список ВСЕХ обзоров.  УПРОЩЕННЫЙ ВАРИАНТ.
-    """
-    reviews = CarReview.objects.all() # Получаем все обзоры из базы данных
-    context = {'reviews': reviews}  # Передаём обзоры в шаблон
+    reviews = CarReview.objects.all()
+    context = {'reviews': reviews}
     return render(request, 'car_review_list.html', context)

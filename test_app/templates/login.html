@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>{{ title }}</h2>
+    {% if errors %}
+        <div class="alert alert-danger">
+            {% for field, error_list in errors.items %}
+                {% for error in error_list %}
+                    {{ error }}<br>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="login-button" type="submit">Log In</button>
+    </form>
+    <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+{% endblock %}
