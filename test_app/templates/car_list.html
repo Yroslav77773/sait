@@ -8,16 +8,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     {% load static %}
-
     <style>
         /* CSS Variables - Dark Theme */
         :root {
             --primary-bg: #1e1e1e;
             --secondary-bg: #2d2d2d;
-            --accent-color: #bb86fc; /* ФИОЛЕТОВЫЙ! */
-            --highlight-color: #bb86fc;   /* Кнопка Log In и остальной цвет */
+            --accent-color: #bb86fc;
+            --highlight-color: #bb86fc;
             --text-primary: #ffffff;
-            --text-secondary: #c7c1d4;   /* Текст */
+            --text-secondary: #c7c1d4;
             --header-height: 70px;
             --border-radius: 18px;
             --box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
@@ -55,7 +54,8 @@
             width: 100%;
             z-index: 100;
             height: var(--header-height);
-            background-color: rgba(30, 30, 30, 0.9); /* Slightly Transparent */
+            background-color: rgba(30, 30, 30, 0.9);
+            /* Slightly Transparent */
             color: var(--text-primary);
             padding: 0 30px;
             display: flex;
@@ -78,7 +78,8 @@
 
         .car-icon {
             margin-right: 15px;
-            color: var(--accent-color);  /* ФИОЛЕТОВЫЙ! */
+            color: var(--accent-color);
+            /* ФИОЛЕТОВЫЙ! */
             font-size: 2em;
             transition: transform 0.1s ease-in-out;
         }
@@ -114,17 +115,20 @@
 
         /* Login Button Styles */
         .login-button {
-            background-color: var(--highlight-color); /* Фиолетовый */
+            background-color: var(--highlight-color);
+            /* Фиолетовый */
             color: var(--secondary-bg);
             border: none;
             padding: 14px 30px;
             border-radius: var(--border-radius);
             text-decoration: none;
-            transition: none; /* Убираем transition */
+            transition: none;
+            /* Убираем transition */
         }
 
         .login-button:hover {
-            background-color: var(--highlight-color); /* Остается фиолетовым при наведении */
+            background-color: var(--highlight-color);
+            /* Остается фиолетовым при наведении */
             color: var(--secondary-bg);
             text-decoration: none;
         }
@@ -154,7 +158,8 @@
         }
 
         .car-image:hover {
-            opacity: 0.85; /* Slight Dim on Hover */
+            opacity: 0.85;
+            /* Slight Dim on Hover */
         }
 
         .card-body {
@@ -202,8 +207,14 @@
         </div>
 
         <div class="header-right">
-            <input type="search" class="form-control search-input" placeholder="Search Listings"
-                aria-label="Search car listings">
+          <!-- Search Form -->
+            <form method="get" action="" class="d-flex">
+               <input type="text" class="form-control search-input" name="search_query" placeholder="Search Listings"
+                    aria-label="Search car listings" value="{{ search_query }}">
+                <button class="login-button" type="submit">
+                  <i class="fas fa-search"></i> Search
+                </button>
+            </form>
             <a href="{% url 'login' %}" class="login-button">Log In</a>
         </div>
     </header>
@@ -211,6 +222,7 @@
     <!-- Car List Section -->
     <div class="container-fluid">
         <h1 class="car-list-title">{% block car_list_title %}Explore Our Car Listings{% endblock %}</h1>
+
         <div class="row justify-content-start">
             {% for car in cars %}
             <div class="col-md-4 mb-3">
