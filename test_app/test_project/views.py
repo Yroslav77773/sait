@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login as auth_login, logout as auth_logout
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm  # Формы для входа и регистрации
-from django.contrib.auth.decorators import login_required  # Декоратор, требующий авторизации
-from .models import Car, CarReview  # Импорт моделей
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from .models import Car, CarReview
+
 
 # Функция для отображения списка автомобилей
 def car_list(request):  # Получает HTTP-запрос
@@ -62,3 +64,14 @@ def car_review_list(request):  # Получает HTTP-запрос
     reviews = CarReview.objects.all()  # Получает все отзывы из базы данных
     context = {'reviews': reviews}  # Создаёт словарь данных для передачи в шаблон
     return render(request, 'car_review_list.html', context)  # Отображает шаблон car_review_list.html с данными
+
+
+def car_list(request):
+    search_query = request.GET.get('search_query', '')
+    cars = Car.objects.all()
+
+    if search_query:
+        cars = cars.filter(car_brand__icontains=search_query)  # Ищем только по car_brand
+
+    context = {'cars': cars, 'search_query': search_query}
+    return render(request, 'car_list.html', context)
