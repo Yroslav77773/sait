@@ -25,6 +25,6 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),  # Страница регистрации
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile, name='profile'),
-    path('car_reviews/', views.car_review_list, name='car_reviews'),
+    path('car_review/<int:review_id>/', views.car_review_detail, name='car_review_detail'),
     path('admin/', admin.site.urls)
 ]

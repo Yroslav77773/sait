@@ -4,6 +4,8 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .models import Car, CarReview
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 
 
 # Функция для отображения списка автомобилей
@@ -75,3 +77,8 @@ def car_list(request):
 
     context = {'cars': cars, 'search_query': search_query}
     return render(request, 'car_list.html', context)
+
+
+def car_review_detail(request, review_id):
+    review = get_object_or_404(CarReview, pk=review_id)
+    return render(request, 'car_review_detail.html', {'review': review})
