@@ -6,6 +6,9 @@ from django.db.models import Q
 from .models import Car, CarReview
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .forms import CarForm
+
 
 
 # Функция для отображения списка автомобилей
@@ -62,10 +65,11 @@ def profile(request):  # Получает HTTP-запрос
     return render(request, 'profile.html')  # Отображает шаблон profile.html
 
 # Функция для отображения списка отзывов
-def car_review_list(request):  # Получает HTTP-запрос
-    reviews = CarReview.objects.all()  # Получает все отзывы из базы данных
-    context = {'reviews': reviews}  # Создаёт словарь данных для передачи в шаблон
-    return render(request, 'car_review_list.html', context)  # Отображает шаблон car_review_list.html с данными
+def car_review_list(request, car_id):
+    car = get_object_or_404(Car, pk=car_id)
+    review = CarReview.objects.filter(car=car).first()  # Получаем только ОДИН отзыв
+    context = {'review': review, 'car': car}
+    return render(request, 'car_review_list.html', context)
 
 
 def car_list(request):
@@ -79,6 +83,41 @@ def car_list(request):
     return render(request, 'car_list.html', context)
 
 
-def car_review_detail(request, review_id):
-    review = get_object_or_404(CarReview, pk=review_id)
-    return render(request, 'car_review_detail.html', {'review': review})
+
+@login_required
+def add_car(request):
+    if request.method == 'POST':
+        form = CarForm(request.POST)
+        if form.is_valid():
+            description = form.cleaned_data['description']
+            car_brand = form.cleaned_data['car_brand']
+            car_model = form.cleaned_data['car_model']
+            car_body = form.cleaned_data['car_body']
+            horse_power = form.cleaned_data['horse_power']
+            car_drive = form.cleaned_data['car_drive']
+            tax = form.cleaned_data['tax']
+            image_url = form.cleaned_data['image_url']
+
+            car = Car(
+                description=description,
+                car_brand=car_brand,
+                car_body=car_body,
+                horse_power=horse_power,
+                car_drive=car_drive,
+                tax=tax,
+                user=request.user.username,  # Извлекаем имя пользователя
+                image_url=image_url,
+                car_model=car_model,  # ADD THE MODEL
+            )
+            car.save()
+            return redirect('car_list')
+    else:
+        form = CarForm()
+    return render(request, 'add_car.html', {'form': form})
+
+
+@login_required
+def delete_car(request, car_id):
+    car = get_object_or_404(Car, pk=car_id)
+    car.delete()
+    return redirect('car_list')

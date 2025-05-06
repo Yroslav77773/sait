@@ -19,12 +19,14 @@ from django.urls import path
 from . import views  # Импортирует views из test_project/views.py
 
 urlpatterns = [
+    path('delete/<int:car_id>/', views.delete_car, name='delete_car'), # URL для удаления автомобиля
+    path('add/', views.add_car, name='add_car'),  # URL для добавления автомобиля
+    path('reviews/<int:car_id>/', views.car_review_list, name='car_review_list'),
     path('', views.car_list, name='car_list'),  # Главная страница (список автомобилей)
     path('login_choice/', views.login_choice, name='login_choice'),  # Страница выбора
     path('login/', views.login_view, name='login'),  # Страница входа
     path('signup/', views.signup, name='signup'),  # Страница регистрации
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile, name='profile'),
-    path('car_review/<int:review_id>/', views.car_review_detail, name='car_review_detail'),
     path('admin/', admin.site.urls)
 ]

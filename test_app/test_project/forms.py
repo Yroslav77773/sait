@@ -2,30 +2,18 @@
 from django import forms
 
 
-class TestForm(forms.Form):
-    text_field = forms.CharField(
-        label="Тестовое поле ввода",
-        max_length=63,
-        min_length=3,
-        required=True
-    )
-
-    age_field = forms.IntegerField(
-        label="Age",
-        min_value=14,
-        max_value=90,
-        required=True
-    )
-
-    password_field = forms.CharField(
-        label="Password",
-        widget=forms.PasswordInput,
-        max_length=32,
-        min_length=8,
-        required=True
-    )
-
-
 class SignUpForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
+
+class CarForm(forms.Form):
+    description = forms.CharField(max_length=255, required=False, label="Description")
+    car_brand = forms.CharField(max_length=255, label="Car Brand")
+    car_model = forms.CharField(max_length=255, label="Car Model", required=False)
+    car_body = forms.CharField(max_length=255, label="Car Body")
+    horse_power = forms.IntegerField(label="Horse Power")
+    car_drive = forms.CharField(max_length=255, label="Car Drive")
+    tax = forms.FloatField(label="Tax")
+    image_url = forms.URLField(label="Image URL", required=False)
+
+
