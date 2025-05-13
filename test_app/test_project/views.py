@@ -8,6 +8,9 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import CarForm
+from .forms import CarForm, CarImageForm
+from .models import Car, CarImage
+
 
 
 
@@ -84,19 +87,21 @@ def car_list(request):
 
 
 
+
+
 @login_required
 def add_car(request):
     if request.method == 'POST':
-        form = CarForm(request.POST)
-        if form.is_valid():
-            description = form.cleaned_data['description']
-            car_brand = form.cleaned_data['car_brand']
-            car_model = form.cleaned_data['car_model']
-            car_body = form.cleaned_data['car_body']
-            horse_power = form.cleaned_data['horse_power']
-            car_drive = form.cleaned_data['car_drive']
-            tax = form.cleaned_data['tax']
-            image_url = form.cleaned_data['image_url']
+        car_form = CarForm(request.POST)
+
+        if car_form.is_valid():
+            description = car_form.cleaned_data['description']
+            car_brand = car_form.cleaned_data['car_brand']
+            car_body = car_form.cleaned_data['car_body']
+            horse_power = car_form.cleaned_data['horse_power']
+            car_drive = car_form.cleaned_data['car_drive']
+            tax = car_form.cleaned_data['tax']
+            image_url = car_form.cleaned_data['image_url']
 
             car = Car(
                 description=description,
@@ -105,19 +110,24 @@ def add_car(request):
                 horse_power=horse_power,
                 car_drive=car_drive,
                 tax=tax,
-                user=request.user.username,  # Извлекаем имя пользователя
+                user=request.user.username,
                 image_url=image_url,
-                car_model=car_model,  # ADD THE MODEL
             )
             car.save()
+
             return redirect('car_list')
     else:
-        form = CarForm()
-    return render(request, 'add_car.html', {'form': form})
+        car_form = CarForm()
 
-
+    return render(request, 'add_car.html', {'car_form': car_form})
 @login_required
 def delete_car(request, car_id):
     car = get_object_or_404(Car, pk=car_id)
     car.delete()
     return redirect('car_list')
+
+
+def car_list_view(request):
+    cars = Car.objects.all()  # Получаем все машины из базы данных
+    context = {'cars': cars}
+    return render(request, 'car_list.html', context) # Отображаем шаблон car_list.html

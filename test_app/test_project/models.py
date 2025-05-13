@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Car(models.Model):
     description = models.CharField(max_length=255, blank=True, null=True)
     car_brand = models.CharField(max_length=255)
@@ -8,7 +9,7 @@ class Car(models.Model):
     car_drive = models.CharField(max_length=255)
     tax = models.FloatField(default=0)
     user = models.CharField(max_length=255)
-
+    image_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.car_brand} {self.car_body}"
