@@ -85,6 +85,8 @@
                             <p class="text-muted">Sorry, there's no review available.</p>
                             {% endif %}
                             <a href="{% url 'delete_car' car.id %}" class="btn btn-danger">Delete</a>
+                            <a href="{% url 'add_reviews' car.id %}" class="btn btn-success">AddRevire</a>
+
                         </div>
                     </div>
                 </div>

@@ -19,8 +19,10 @@ from django.urls import path
 from . import views  # Импортирует views из test_project/views.py
 
 urlpatterns = [
-    #path('', views.car_review_list1, name='home'),  # Сопоставляет пустой URL с функцией представления home
-    #path('car/<int:car_id>/reviews/', views.car_review_list1, name='car_review_list'),
+    path('', views.car_list, name='car_list'),
+    path('car/<int:car_id>/reviews/', views.car_review_list, name='car_review_list'),  # URL для списка отзывов
+    path('car/<int:car_id>/add_review/', views.add_reviews, name='add_reviews'),
+
     path('cars/', views.car_list_view, name='car_list'),
     path('delete/<int:car_id>/', views.delete_car, name='delete_car'), # URL для удаления автомобиля
     path('add/', views.add_car, name='add_car'),  # URL для добавления автомобиля
@@ -31,5 +33,6 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),  # Страница регистрации
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile, name='profile'),
-    path('admin/', admin.site.urls)
+    path('admin/', admin.site.urls),
+
 ]

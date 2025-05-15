@@ -1,6 +1,8 @@
 # forms.py
 from django import forms
 
+from .models import CarReview
+
 
 
 CAR_BODY_CHOICES = [
@@ -156,4 +158,11 @@ class CarForm(forms.Form):
 
 class CarImageForm(forms.Form):
     image = forms.ImageField(label="Car Image")
+
+
+class ReviewForm(forms.Form):
+    text = forms.CharField(widget=forms.Textarea, label="Your Review")
+    likes = forms.IntegerField(label="Likes", initial=0)
+    dislikes = forms.IntegerField(label="Dislikes", initial=0)
+
 

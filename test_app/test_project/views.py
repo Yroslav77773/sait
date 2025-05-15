@@ -8,8 +8,9 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import CarForm
-from .forms import CarForm, CarImageForm
+from .forms import CarForm, CarImageForm, ReviewForm
 from .models import Car, CarImage
+from django.contrib import messages
 
 
 
@@ -68,11 +69,8 @@ def profile(request):  # Получает HTTP-запрос
     return render(request, 'profile.html')  # Отображает шаблон profile.html
 
 # Функция для отображения списка отзывов
-def car_review_list(request, car_id):
-    car = get_object_or_404(Car, pk=car_id)
-    review = CarReview.objects.filter(car=car).first()  # Получаем только ОДИН отзыв
-    context = {'review': review, 'car': car}
-    return render(request, 'car_review_list.html', context)
+#def car_review_list(request, car_id):
+    ####return render(request, 'car_review_list.html', context)
 
 
 def car_list(request):
@@ -89,7 +87,7 @@ def car_list(request):
 
 
 
-@login_required
+
 def add_car(request):
     if request.method == 'POST':
         car_form = CarForm(request.POST)
@@ -131,3 +129,34 @@ def car_list_view(request):
     cars = Car.objects.all()  # Получаем все машины из базы данных
     context = {'cars': cars}
     return render(request, 'car_list.html', context) # Отображаем шаблон car_list.html
+
+
+@login_required
+def add_reviews(request, car_id):
+    car = get_object_or_404(Car, pk=car_id)
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            text = form.cleaned_data['text']
+            likes = form.cleaned_data['likes']
+            dislikes = form.cleaned_data['dislikes']
+
+            carreview = CarReview(
+                car=car,
+                contents=text,
+                likes=likes,
+                dislikes=dislikes
+            )
+            carreview.save()
+            return redirect('car_review_list', car_id=car.id)  # Изменено redirect на car_review_list
+        else:
+            return render(request, 'add_review.html', {'form': form, 'car': car})
+    else:
+        form = ReviewForm()
+        return render(request, 'add_review.html', {'form': form, 'car': car})
+
+
+def car_review_list(request, car_id):
+    car = get_object_or_404(Car, pk=car_id)
+    reviews = CarReview.objects.filter(car=car)  # Получаем все отзывы для конкретного автомобиля
+    return render(request, 'car_review_list.html', {'car': car, 'reviews': reviews})
