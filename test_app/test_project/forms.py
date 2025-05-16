@@ -1,8 +1,6 @@
 # forms.py
 from django import forms
-
 from .models import CarReview
-
 
 
 CAR_BODY_CHOICES = [
@@ -19,14 +17,11 @@ CAR_BODY_CHOICES = [
 
 
 
-
 CAR_DRIVE_CHOICES = [
     ("front", "Передний"),
     ("rear", "Задний"),
     ("all", "Полный"),
 ]
-
-
 
 
 CAR_BRANDS = [
@@ -139,22 +134,20 @@ CAR_BRANDS = [
 ]
 
 
-
-
-
-
 class SignUpForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
 
+
 class CarForm(forms.Form):
-    car_brand = forms.ChoiceField(choices=CAR_BRANDS, label="Car Brand")  # Используем ChoiceField
+    car_brand = forms.ChoiceField(choices=CAR_BRANDS, label="Car Brand")
     car_body = forms.ChoiceField(choices=CAR_BODY_CHOICES, label="Car Body")
+    car_model = forms.CharField(max_length=255)
     horse_power = forms.IntegerField(label="Horse Power", min_value=1)
     car_drive = forms.ChoiceField(choices=CAR_DRIVE_CHOICES, label="Car Drive")
     tax = forms.FloatField(label="Tax",  min_value=1)
-    image_url = forms.URLField(label="Image URL", required=False)
     description = forms.CharField(max_length=255, required=False, label="Description", widget=forms.Textarea)
+
 
 class CarImageForm(forms.Form):
     image = forms.ImageField(label="Car Image")

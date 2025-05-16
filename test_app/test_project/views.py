@@ -9,10 +9,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import CarForm
 from .forms import CarForm, CarImageForm, ReviewForm
-from .models import Car, CarImage
+from .models import Car
 from django.contrib import messages
-
-
 
 
 # Функция для отображения списка автомобилей
@@ -21,9 +19,11 @@ def car_list(request):  # Получает HTTP-запрос
     context = {'cars': cars}  # Создаёт словарь данных для передачи в шаблон
     return render(request, 'car_list.html', context)  # Отображает шаблон car_list.html с данными
 
+
 # Функция для отображения страницы выбора способа входа (Войти или Зарегистрироваться)
 def login_choice(request): #Получает HTTP-запрос
     return render(request, 'login_choice.html')  # Отображает страницу выбора (login_choice.html)
+
 
 # Функция для обработки входа пользователя
 def login_view(request):  # Получает HTTP-запрос
@@ -38,6 +38,7 @@ def login_view(request):  # Получает HTTP-запрос
     else:  # Если это просто запрос страницы (GET-запрос)
         form = AuthenticationForm()  # Создаёт пустую форму
         return render(request, 'login.html', {'form': form})  # Отображает пустую форму входа
+
 
 # Функция для обработки регистрации пользователя
 def signup(request):  # Получает HTTP-запрос
@@ -59,18 +60,16 @@ def signup(request):  # Получает HTTP-запрос
             "title": "Sign Up",  # Передаёт заголовок в шаблон
         })
 
+
 # Функция для обработки выхода пользователя
 def logout_view(request):  # Получает HTTP-запрос
     auth_logout(request)  # Выполняет выход пользователя
     return redirect('car_list')  # Перенаправляет на страницу car_list
 
+
 # Функция для отображения профиля пользователя
 def profile(request):  # Получает HTTP-запрос
     return render(request, 'profile.html')  # Отображает шаблон profile.html
-
-# Функция для отображения списка отзывов
-#def car_review_list(request, car_id):
-    ####return render(request, 'car_review_list.html', context)
 
 
 def car_list(request):
@@ -84,10 +83,6 @@ def car_list(request):
     return render(request, 'car_list.html', context)
 
 
-
-
-
-
 def add_car(request):
     if request.method == 'POST':
         car_form = CarForm(request.POST)
@@ -95,21 +90,21 @@ def add_car(request):
         if car_form.is_valid():
             description = car_form.cleaned_data['description']
             car_brand = car_form.cleaned_data['car_brand']
+            car_model = car_form.cleaned_data['car_model']
             car_body = car_form.cleaned_data['car_body']
             horse_power = car_form.cleaned_data['horse_power']
             car_drive = car_form.cleaned_data['car_drive']
             tax = car_form.cleaned_data['tax']
-            image_url = car_form.cleaned_data['image_url']
 
             car = Car(
                 description=description,
                 car_brand=car_brand,
+                car_model = car_model,
                 car_body=car_body,
                 horse_power=horse_power,
                 car_drive=car_drive,
                 tax=tax,
                 user=request.user.username,
-                image_url=image_url,
             )
             car.save()
 
@@ -118,6 +113,8 @@ def add_car(request):
         car_form = CarForm()
 
     return render(request, 'add_car.html', {'car_form': car_form})
+
+
 @login_required
 def delete_car(request, car_id):
     car = get_object_or_404(Car, pk=car_id)

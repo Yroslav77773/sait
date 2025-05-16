@@ -60,8 +60,7 @@
             <div class="col-md-4 mb-3">
                 <div class="card h-100 shadow">
                     {% if car.carimage_set.first.image_path %}
-                    <img src="" alt="{{ car.car_brand }} {{ car.car_model }}"
-                        class="card-img-top" loading="lazy">
+                    <img src="{{ car.carimage_set.first.image_path }}" alt="" loading="lazy">
                     {% else %}
                     <div class="d-flex align-items-center justify-content-center"
                         style="height: 200px; background-color: #ffe0b2; color: #d84315;">
@@ -73,9 +72,9 @@
                         <h5 class="card-title">{{ car.car_brand }} {{ car.car_model }}</h5>
                         <p class="card-text">Body: {{ car.car_body }}</p>
                         <p class="card-text">Description: {{ car.description|default:"No description available" }}</p>
-                        <p class="card-text">Horsepower: {{ car.horse_power }}</p>
                         <p class="card-text">Drive: {{ car.car_drive }}</p>
-                        <p class="card-text">Tax: {{ car.tax }}</p>
+                        <p>Налог: {{ car.calculated_tax }}</p>
+                        <p>Мощность двигателя: {{ car.horse_power }}</p>
                         <div class="mt-auto">
                             {% if car.carreview_set.exists %}
                             <a href="{% url 'car_review_list' car.id %}" class="btn btn-primary btn-block">
@@ -85,8 +84,7 @@
                             <p class="text-muted">Sorry, there's no review available.</p>
                             {% endif %}
                             <a href="{% url 'delete_car' car.id %}" class="btn btn-danger">Delete</a>
-                            <a href="{% url 'add_reviews' car.id %}" class="btn btn-success">AddRevire</a>
-
+                            <a href="{% url 'add_reviews' car.id %}" class="btn btn-success">AddReview</a>
                         </div>
                     </div>
                 </div>

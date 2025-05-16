@@ -16,7 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from . import views  # Импортирует views из test_project/views.py
+from . import views  # Импортирует views из test_project/views.p
+
 
 urlpatterns = [
     path('', views.car_list, name='car_list'),
