@@ -1,93 +1,92 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from .models import Car, CarReview
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .forms import CarForm
+from django.contrib import messages
+from .models import Car, CarReview
 from .forms import CarForm, CarImageForm, ReviewForm
-from .models import Car
 from django.contrib import messages
 
-
-# Функция для отображения списка автомобилей
-def car_list(request):  # Получает HTTP-запрос
-    cars = Car.objects.all()  # Получает все объекты Car из базы данных
-    context = {'cars': cars}  # Создаёт словарь данных для передачи в шаблон
-    return render(request, 'car_list.html', context)  # Отображает шаблон car_list.html с данными
-
-
-# Функция для отображения страницы выбора способа входа (Войти или Зарегистрироваться)
-def login_choice(request): #Получает HTTP-запрос
-    return render(request, 'login_choice.html')  # Отображает страницу выбора (login_choice.html)
-
-
-# Функция для обработки входа пользователя
-def login_view(request):  # Получает HTTP-запрос
-    if request.method == 'POST':  # Если это отправка формы (POST-запрос)
-        form = AuthenticationForm(request, data=request.POST)  # Создаёт форму с данными из запроса
-        if form.is_valid():  # Если форма заполнена правильно
-            user = form.get_user()  # Получает объект пользователя из формы
-            auth_login(request, user)  # Выполняет вход пользователя
-            return redirect('car_list')  # Перенаправляет на страницу car_list
-        else:  # Если форма заполнена с ошибками
-            return render(request, 'login.html', {'form': form})  # Отображает форму входа с ошибками
-    else:  # Если это просто запрос страницы (GET-запрос)
-        form = AuthenticationForm()  # Создаёт пустую форму
-        return render(request, 'login.html', {'form': form})  # Отображает пустую форму входа
-
-
-# Функция для обработки регистрации пользователя
-def signup(request):  # Получает HTTP-запрос
-     if request.method == 'POST':  # Если это отправка формы (POST-запрос)
-        form = UserCreationForm(request.POST)  # Создаёт форму с данными из запроса
-        if form.is_valid():  # Если форма заполнена правильно
-            user = form.save()  # Создаёт нового пользователя в базе данных
-            auth_login(request, user)  # Выполняет вход пользователя
-            return redirect('car_list')  # Перенаправляет на страницу car_list
-        else:  # Если форма заполнена с ошибками
-           return render(request, "signup.html", {  # Отображает форму регистрации с ошибками
-                "form": form,  # Передаёт форму в шаблон
-                "title": "Sign Up",  # Передаёт заголовок в шаблон
-                "errors": form.errors,  # Передаёт ошибки в шаблон
-            })
-     else:  # Если это просто запрос страницы (GET-запрос)
-        return render(request, "signup.html", {  # Отображает пустую форму регистрации
-            "form": UserCreationForm(),  # Создаёт пустую форму
-            "title": "Sign Up",  # Передаёт заголовок в шаблон
-        })
-
-
-# Функция для обработки выхода пользователя
-def logout_view(request):  # Получает HTTP-запрос
-    auth_logout(request)  # Выполняет выход пользователя
-    return redirect('car_list')  # Перенаправляет на страницу car_list
-
-
-# Функция для отображения профиля пользователя
-def profile(request):  # Получает HTTP-запрос
-    return render(request, 'profile.html')  # Отображает шаблон profile.html
-
-
+# Функция для отображения списка автомобилей с возможностью поиска
 def car_list(request):
+    # Получаем поисковый запрос из параметров GET (если есть)
     search_query = request.GET.get('search_query', '')
+    # Получаем все автомобили из базы данных
     cars = Car.objects.all()
 
+    # Если есть поисковый запрос, фильтруем автомобили по марке (без учета регистра)
     if search_query:
-        cars = cars.filter(car_brand__icontains=search_query)  # Ищем только по car_brand
+        cars = cars.filter(car_brand__icontains=search_query)
 
+    # Создаем контекст для передачи в шаблон
     context = {'cars': cars, 'search_query': search_query}
+    # Отображаем шаблон car_list.html с переданными данными
     return render(request, 'car_list.html', context)
 
+# Функция для отображения страницы выбора способа входа
+def login_choice(request):
+    # Просто отображаем шаблон login_choice.html
+    return render(request, 'login_choice.html')
 
+# Функция для обработки входа пользователя
+def login_view(request):
+    if request.method == 'POST':  # Если запрос POST (отправка формы)
+        # Создаем форму аутентификации с данными из запроса
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():  # Если данные формы валидны
+            user = form.get_user()  # Получаем пользователя из формы
+            auth_login(request, user)  # Выполняем вход пользователя
+            return redirect('car_list')  # Перенаправляем на список автомобилей
+        else:
+            # Если форма невалидна, показываем ее с ошибками
+            return render(request, 'login.html', {'form': form})
+    else:  # Если запрос GET (просто открытие страницы)
+        # Создаем пустую форму аутентификации
+        form = AuthenticationForm()
+        return render(request, 'login.html', {'form': form})
+
+# Функция для обработки регистрации пользователя
+def signup(request):
+    if request.method == 'POST':  # Если запрос POST (отправка формы)
+        # Создаем форму регистрации с данными из запроса
+        form = UserCreationForm(request.POST)
+        if form.is_valid():  # Если данные формы валидны
+            user = form.save()  # Сохраняем нового пользователя
+            auth_login(request, user)  # Выполняем вход нового пользователя
+            return redirect('car_list')  # Перенаправляем на список автомобилей
+        else:
+            # Если форма невалидна, показываем ее с ошибками
+            return render(request, "signup.html", {
+                "form": form,
+                "title": "Sign Up",
+                "errors": form.errors,
+            })
+    else:  # Если запрос GET (просто открытие страницы)
+        # Показываем пустую форму регистрации
+        return render(request, "signup.html", {
+            "form": UserCreationForm(),
+            "title": "Sign Up",
+        })
+
+# Функция для выхода пользователя
+def logout_view(request):
+    auth_logout(request)  # Выполняем выход пользователя
+    return redirect('car_list')  # Перенаправляем на список автомобилей
+
+# Функция для отображения профиля пользователя
+def profile(request):
+    # Просто отображаем шаблон profile.html
+    return render(request, 'profile.html')
+
+# Функция для добавления автомобиля (только для авторизованных пользователей)
+@login_required
 def add_car(request):
-    if request.method == 'POST':
-        car_form = CarForm(request.POST)
-
-        if car_form.is_valid():
+    if request.method == 'POST':  # Если запрос POST (отправка формы)
+        car_form = CarForm(request.POST)  # Создаем форму с данными
+        if car_form.is_valid():  # Если данные формы валидны
+            # Получаем очищенные данные из формы
             description = car_form.cleaned_data['description']
             car_brand = car_form.cleaned_data['car_brand']
             car_model = car_form.cleaned_data['car_model']
@@ -96,48 +95,47 @@ def add_car(request):
             car_drive = car_form.cleaned_data['car_drive']
             tax = car_form.cleaned_data['tax']
 
+            # Создаем и сохраняем новый автомобиль
             car = Car(
                 description=description,
                 car_brand=car_brand,
-                car_model = car_model,
+                car_model=car_model,
                 car_body=car_body,
                 horse_power=horse_power,
                 car_drive=car_drive,
                 tax=tax,
-                user=request.user.username,
+                user=request.user.username,  # Сохраняем имя текущего пользователя
             )
             car.save()
 
-            return redirect('car_list')
-    else:
-        car_form = CarForm()
+            return redirect('car_list')  # Перенаправляем на список автомобилей
+    else:  # Если запрос GET (просто открытие страницы)
+        car_form = CarForm()  # Создаем пустую форму
 
     return render(request, 'add_car.html', {'car_form': car_form})
 
-
+# Функция для удаления автомобиля (только для авторизованных пользователей)
 @login_required
 def delete_car(request, car_id):
+    # Получаем автомобиль по ID или возвращаем 404 если не найден
     car = get_object_or_404(Car, pk=car_id)
-    car.delete()
-    return redirect('car_list')
+    car.delete()  # Удаляем автомобиль
+    return redirect('car_list')  # Перенаправляем на список автомобилей
 
-
-def car_list_view(request):
-    cars = Car.objects.all()  # Получаем все машины из базы данных
-    context = {'cars': cars}
-    return render(request, 'car_list.html', context) # Отображаем шаблон car_list.html
-
-
+# Функция для добавления отзыва (только для авторизованных пользователей)
 @login_required
 def add_reviews(request, car_id):
+    # Получаем автомобиль по ID или возвращаем 404 если не найден
     car = get_object_or_404(Car, pk=car_id)
-    if request.method == 'POST':
-        form = ReviewForm(request.POST)
-        if form.is_valid():
+    if request.method == 'POST':  # Если запрос POST (отправка формы)
+        form = ReviewForm(request.POST)  # Создаем форму с данными
+        if form.is_valid():  # Если данные формы валидны
+            # Получаем очищенные данные из формы
             text = form.cleaned_data['text']
             likes = form.cleaned_data['likes']
             dislikes = form.cleaned_data['dislikes']
 
+            # Создаем и сохраняем новый отзыв
             carreview = CarReview(
                 car=car,
                 contents=text,
@@ -145,15 +143,20 @@ def add_reviews(request, car_id):
                 dislikes=dislikes
             )
             carreview.save()
-            return redirect('car_review_list', car_id=car.id)  # Изменено redirect на car_review_list
+            # Перенаправляем на список отзывов для этого автомобиля
+            return redirect('car_review_list', car_id=car.id)
         else:
+            # Если форма невалидна, показываем ее с ошибками
             return render(request, 'add_review.html', {'form': form, 'car': car})
-    else:
-        form = ReviewForm()
+    else:  # Если запрос GET (просто открытие страницы)
+        form = ReviewForm()  # Создаем пустую форму
         return render(request, 'add_review.html', {'form': form, 'car': car})
 
-
+# Функция для просмотра списка отзывов для конкретного автомобиля
 def car_review_list(request, car_id):
+    # Получаем автомобиль по ID или возвращаем 404 если не найден
     car = get_object_or_404(Car, pk=car_id)
-    reviews = CarReview.objects.filter(car=car)  # Получаем все отзывы для конкретного автомобиля
+    # Получаем все отзывы для этого автомобиля
+    reviews = CarReview.objects.filter(car=car)
+    # Отображаем шаблон с автомобилем и его отзывами
     return render(request, 'car_review_list.html', {'car': car, 'reviews': reviews})

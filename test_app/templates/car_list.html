@@ -20,7 +20,7 @@
                 <div class="col-auto">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-car fa-2x mr-2 text-warning"></i>
-                        <a class="navbar-brand text-white h1 mb-0" href="#">CarLister</a>
+                        <a class="navbar-brand text-white h1 mb-0" href="#"></a>
                     </div>
                 </div>
                 <div class="col">
@@ -28,7 +28,7 @@
                     <form method="get" action="" class="form-inline">
                         <div class="input-group">
                             <input type="text" class="form-control form-control-sm" name="search_query"
-                                placeholder="Search" aria-label="Search car listings" value="{{ search_query }}"
+                                placeholder="Поиск" aria-label="Search car listings" value="{{ search_query }}"
                                 style="width: 250px;">
                             <!-- Wider Search Bar -->
                             <div class="input-group-append">
@@ -42,10 +42,10 @@
                 <div class="col-auto">
                     <!-- Log In (Right) -->
                     <a href="{% url 'login' %}" class="btn btn-outline-light">
-                        <i class="fas fa-sign-in-alt"></i> Log In
+                        <i class="fas fa-sign-in-alt"></i> Авторизация
                     </a>
                     <a href="{% url 'add_car' %}" class="btn btn-success"
-                        style="width: 120px; display: inline-block;">Add New Car</a>
+                        style="width: 110px; display: inline-block;">AddCar</a>
                 </div>
             </div>
         </div>
@@ -53,14 +53,14 @@
 
     <!-- Car List Section -->
     <div class="container mt-4">
-        <h2 class="text-center mb-4">{% block car_list_title %}Explore Our Car Listings{% endblock %}</h2>
+        <h2 class="text-center mb-4">{% block car_list_title %}Автомобили{% endblock %}</h2>
 
         <div class="row">
             {% for car in cars %}
             <div class="col-md-4 mb-3">
                 <div class="card h-100 shadow">
                     {% if car.carimage_set.first.image_path %}
-                    <img src="{{ car.carimage_set.first.image_path }}" alt="" loading="lazy">
+                    <img src="{{ car.carimage_set.first.image_path }}" alt="" loading="lazy" style="width: 100%; height: 300px; object-fit: cover;">
                     {% else %}
                     <div class="d-flex align-items-center justify-content-center"
                         style="height: 200px; background-color: #ffe0b2; color: #d84315;">
@@ -70,21 +70,21 @@
                     {% endif %}
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">{{ car.car_brand }} {{ car.car_model }}</h5>
-                        <p class="card-text">Body: {{ car.car_body }}</p>
-                        <p class="card-text">Description: {{ car.description|default:"No description available" }}</p>
-                        <p class="card-text">Drive: {{ car.car_drive }}</p>
+                        <p>Кузов: {{ car.car_body }}</p>
+                        <p>Описание: {{ car.description|default:"No description available" }}</p>
+                        <p>Привод: {{ car.car_drive }}</p>
                         <p>Налог: {{ car.calculated_tax }}</p>
                         <p>Мощность двигателя: {{ car.horse_power }}</p>
                         <div class="mt-auto">
                             {% if car.carreview_set.exists %}
                             <a href="{% url 'car_review_list' car.id %}" class="btn btn-primary btn-block">
-                                <i class="fas fa-star mr-1"></i> View Review
+                                <i class="fas fa-star mr-1"></i> Посмотор
                             </a>
                             {% else %}
-                            <p class="text-muted">Sorry, there's no review available.</p>
+                            <p class="text-muted">К сожалению, отзыв отсутствует :(</p>
                             {% endif %}
-                            <a href="{% url 'delete_car' car.id %}" class="btn btn-danger">Delete</a>
-                            <a href="{% url 'add_reviews' car.id %}" class="btn btn-success">AddReview</a>
+                            <a href="{% url 'delete_car' car.id %}" class="btn btn-danger">Удалить</a>
+                            <a href="{% url 'add_reviews' car.id %}" class="btn btn-success">Добавить Отзыв</a>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,3 @@
-# forms.py
 from django import forms
 from .models import CarReview
 
@@ -155,7 +154,5 @@ class CarImageForm(forms.Form):
 
 class ReviewForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea, label="Your Review")
-    likes = forms.IntegerField(label="Likes", initial=0)
-    dislikes = forms.IntegerField(label="Dislikes", initial=0)
-
-
+    likes = forms.IntegerField(label="Likes", initial=0,  min_value=1)
+    dislikes = forms.IntegerField(label="Dislikes", initial=0,  min_value=1)

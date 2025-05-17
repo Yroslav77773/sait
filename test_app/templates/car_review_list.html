@@ -17,7 +17,7 @@
                 <div class="col-auto">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-car fa-2x mr-2 text-warning"></i>
-                        <a class="navbar-brand text-white h1 mb-0" href="{% url 'car_list' %}">CarLister</a>
+                        <a class="navbar-brand text-white h1 mb-0" href="{% url 'car_list' %}">Главная страница</a>
                     </div>
                 </div>
                 <div class="col">
@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-auto">
                     <a href="{% url 'login' %}" class="btn btn-outline-light">
-                        <i class="fas fa-sign-in-alt"></i> Log In
+                        <i class="fas fa-sign-in-alt"></i> Авторизация
                     </a>
                 </div>
             </div>
@@ -43,14 +43,14 @@
     </header>
 
     <div class="container mt-4">
-        <h1 class="mb-4">Reviews for {{ car.car_brand }} {{ car.car_model }}</h1>
+        <h1 class="mb-4">Отзыв для {{ car.car_brand }} {{ car.car_model }}</h1>
 
         {% if reviews %}
             {% for review in reviews %}
                 <div class="card shadow mb-3">
                     <div class="card-body">
-                        <p class="card-text"><strong>Author ID:</strong> {{ review.author.username }}</p>
-                        <p class="card-text"><strong>Review:</strong> {{ review.contents }}</p>
+                        <p class="card-text"><strong>Автор:</strong> {{ review.author.username }}</p>
+                        <p class="card-text"><strong>Отзыв:</strong> {{ review.contents }}</p>
                         <p class="card-text">
                             <strong>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">

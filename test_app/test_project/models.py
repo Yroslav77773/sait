@@ -15,10 +15,8 @@ class Car(models.Model):
         return f"{self.car_brand} {self.car_body}"
 
 
-
-    @property
     def calculated_tax(self):
-        """Рассчитывает и возвращает налог на основе horsepower."""
+        """Рассчитывает и возвращает налог на основе horse_power."""
         return (self.horse_power * 2) / 3
 
 
